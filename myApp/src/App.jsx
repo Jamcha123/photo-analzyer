@@ -8,60 +8,64 @@ import './App.css'
 const ai = new openai({apiKey: "<secret-key>", dangerouslyAllowBrowser: true});
 
 function AddCards(){
-  const [active, setActive] = useState(false)
   useEffect(() => {
-    const [form1, form2] = [document.getElementById("form1"), document.getElementById("form2")]
-    form1.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      $(".items").remove()
-      const collections = await ai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {type: "text", text: "describe the image in 10 words or less"},
-              {
-                type: "image_url",
-                image_url: {
-                  url: document.getElementById("text").value,
-                  detail: "auto",
+    const form = document.getElementById("form"); 
+    const input = document.getElementById("image");
+    
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault(); 
+      $("#text").empty()
+      if(input.value != ""){
+        const collection = await ai.chat.completions.create({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "user",
+              content: [
+                {type: "text", text: "describe the image in 20 words or less"},
+                {
+                  type: "image_url", 
+                  image_url: {
+                    "url": input.value,
+                    "detail": "high"
+                  }
                 }
-              }
-            ]
-          }
-        ]
-      });
-      let x = document.createElement("h1")
-      x.classList.add("items")
-      x.innerText = collections.choices[0].message["content"];
-      document.getElementById("describe").appendChild(x)
-    })
-    form2.addEventListener("submit", (e) => {
-      e.preventDefault();
-      $(".items").remove()
+              ]
+            }
+          ]
+        })
+        console.log(collection.choices[0].message)
+        let x = document.createElement("h1"); 
+        x.classList.add("item1")
+        x.innerText = collection.choices[0].message["content"]
+        document.getElementById("text").appendChild(x); 
+
+        input.value = ""
+      }
     })
   })
   return(
-    <div className="relative w-[100%] h-[100%] m-auto p-[0] flex flex-col align-middle justify-center text-center ">
-      <div className="w-[100%] h-[100%] m-auto p-[0] flex flex-row align-middle justify-center text-center relative ">
-        <div className="w-[30em] h-[75%] m-auto p-[0] relative flex flex-col align-middle justify-evenly text-center ">
-          <div className="relative w-[100%] h-[10%] m-auto p-[0] flex flex-col align-middle justify-center text-center ">
-            <h1 className='text-3xl text-white'>Image describer</h1>
+    <div className="relative w-[100%] h-[100%] m-auto p-[0] bg-transparent flex flex-col align-middle justify-center">
+      <div className="w-[40em] h-[40em] m-auto p-[0] flex flex-col align-middle justify-center text-center  ">
+        <div className="w-[100%] h-[50%] m-auto p-[0] bg-transparent flex flex-col align-middle justify-evenly ">
+          <div className="w-[100%] h-[20%] m-auto p-[0] flex flex-col align-middle justify-center text-center ">
+            <h1 className='text-3xl text-white'>Image Describer - OpenAI</h1>
+            <h1 className="text-3xl text-white">Please have patient</h1>
           </div>
-          <motion.form initial={{scale: 1}} animate={{scale: active? 0 : 1, translateY: active? 0 + "%" : 50 + "%"}} transition={{type: "spring", duration: 2}} action="/" id='form1' method="get" className="w-[100%] h-[100%] m-auto p-[0] flex flex-col align-middle justify-center text-center ">
-            <input type="text" placeholder='enter a image url' id='text' className="w-[100%] h-[3em] text-2xl text-white m-auto p-[0] relative text-center border-transparent bg-slate-800 " /> 
-            <input type="submit" value="submit" id='submit' onClick={() => setActive(true)} className="w-[100%] cursor-pointer h-[3em] m-auto p-[0] relative text-center text-2xl text-white border-transparent bg-slate-800 " /> 
-          </motion.form>
-          <motion.form initial={{scale: 0}} animate={{scale: active? 1 : 0, translateY: active? -50 + "%" : 0 + "%"}} transition={{type: "spring", duration: 2}} action="/" id='form2' method="get" className="w-[100%] h-[100%] m-auto p-[0] flex flex-col align-middle justify-center text-center ">
-            <div id='describe' className="w-[100%] h-[75%] m-auto p-[0] relative bg-transparent flex flex-col align-middle justify-center text-center ">
-              
+          <div className="w-[100%] h-[80%] m-auto p-[0] relative flex-col align-middle justify-center text-center flex  " id='text'></div>
+        </div>
+        <div className="w-[100%] h-[50%] m-auto p-[0] bg-transparent flex flex-row md:flex-col align-middle justify-evenly ">
+          <form action="/" className="w-[100%] h-[100%] m-auto p-[0] relative flex flex-row align-middle justify-center text-center " method='get' id='form'>
+            <div className="w-[100%] h-[7.5em] m-auto p-[0] flex flex-row align-middle justify-center text-center  ">
+              <motion.button initial={{scale: 1}} whileHover={{scale: 0.8}} transition={{type: "spring", duration: 1}} type='click' id='bild' className="w-[20%] h-[3em] m-0 p-[0] bg-slate-700 border-white border-[1px] text-center text-white text-2xl cursor-pointer ">
+                <span className="material-symbols-outlined text-5xl text-white ">
+                    image
+                </span>
+              </motion.button>
+              <input type="text" id='image' placeholder='enter a image url' className="w-[60%] h-[3em] m-0 p-[0] bg-slate-700 text-center text-white text-2xl cursor-text " />
+              <motion.input initial={{scale: 1}} whileHover={{scale: 0.8}} transition={{type: "spring", duration: 1}} type="submit" id='submit' value="Submit" className="w-[20%] h-[3em] m-0 p-[0] bg-slate-700 border-white border-[1px] text-center text-white text-2xl cursor-pointer " />
             </div>
-            <div className="w-[100%] h-[25%] mt-[5%] m-auto p-[0] flex flex-row align-middle justify-center text-center relative ">
-              <input type="button" id='submit' onClick={() => setActive(false)} value="Go back" className="w-[50%] cursor-pointer h-[3em] m-auto p-[0] text-2xl text-white text-center border-transparent relative bg-slate-800 " />
-              <input type="button" id="photo" value="See photo" className="w-[50%] h-[3em] m-auto p-[0] relative border-transparent bg-slate-800 text-2xl text-white text-center cursor-pointer " />
-            </div>
-          </motion.form>
+          </form>
         </div>
       </div>
     </div>

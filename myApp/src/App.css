@@ -3,13 +3,16 @@
 @tailwind components;
 @tailwind utilities;
 
-h1{
+h1, input{
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-style: normal;
 }
+#text{
+    overflow: visible;
+}
 @layer components{
-    h1{
-        @apply text-3xl text-white
+    .item1{
+        @apply text-3xl text-gray-300
     }
 }
