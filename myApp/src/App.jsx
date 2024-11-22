@@ -1,48 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import {motion} from 'framer-motion';
 import $ from 'jquery';
-import openai from 'openai';
 import './App.css'
 
 function AddCards(){
   useEffect(() => {
     const form = document.getElementById("form"); 
     const input = document.getElementById("image");
-
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault(); 
-        $("#text").empty()
-        if(input.value != ""){
-          const collection = await ai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-              {
-                role: "user",
-                content: [
-                  {type: "text", text: "describe the image in 20 words or less"},
-                  {
-                    type: "image_url", 
-                    image_url: {
-                      "url": input.value,
-                      "detail": "high"
-                    }
-                  }
-                ]
-              }
-            ]
-          }).catch((err) => {
-            alert(err)
-            input.value = ""
-          })
-          console.log(collection.choices[0].message)
-          let x = document.createElement("h1"); 
-          x.classList.add("item1")
-          x.innerText = collection.choices[0].message["content"]
-          document.getElementById("text").appendChild(x); 
-        
-          input.value = ""
-        }
-      })
   })
   return(
     <div className="relative w-[100%] h-[100%] m-auto p-[0] bg-transparent flex flex-col align-middle justify-center">
