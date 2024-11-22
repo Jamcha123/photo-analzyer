@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-h1, input{
+h1, input, button a{
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
     font-style: normal;
